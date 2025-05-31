@@ -1,3 +1,4 @@
+@tool
 class_name World4D
 extends Node3D
 

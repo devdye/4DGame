@@ -1,7 +1,9 @@
+@tool
 # This script extends MeshInstance3D to create and display a 4D hypercube by slicing it into tetrahedra.
 # It defines a list of tetrahedra (Basis4 objects), functions to scale and rotate them in 4D space,
 # computes 3D triangle faces from intersections with a 3D subspace, and builds the resulting mesh.
 
+class_name MeshInstance4D
 extends MeshInstance3D
 
 
@@ -529,21 +531,21 @@ func get_triangles_from_points(points: Array) -> Array:
 		var d = p - p0
 		poly_2d.append(Vector2(d.dot(u), d.dot(v)))
 
-	# 2)  Order the four vertices CCW around their centre
+	# 2)  Order the four vertices CCW around their center
 	
 	# Compute center of projected points
-	var centre := Vector2()
+	var center := Vector2()
 	for p in poly_2d:
-		centre += p
-	centre /= 4.0
+		center += p
+	center /= 4.0
 
 	# Initialize index order
 	var order := [0, 1, 2, 3]
 	
-	# Sort indices by angle around centre
+	# Sort indices by angle around center
 	order.sort_custom(func(a, b):
-		return atan2(poly_2d[a].y - centre.y, poly_2d[a].x - centre.x) \
-			< atan2(poly_2d[b].y - centre.y, poly_2d[b].x - centre.x)
+		return atan2(poly_2d[a].y - center.y, poly_2d[a].x - center.x) \
+			< atan2(poly_2d[b].y - center.y, poly_2d[b].x - center.x)
 	)
 
 	# 3) Fan-triangulate: 0-1-2 and 0-2-3
@@ -634,7 +636,7 @@ func create_mesh():
 	var arrays := []
 	arrays.resize(ArrayMesh.ARRAY_MAX)
 	arrays[ArrayMesh.ARRAY_VERTEX] = mesh_data.vertices
-	arrays[ArrayMesh.ARRAY_INDEX]  = mesh_data.indices
+	arrays[ArrayMesh.ARRAY_INDEX] = mesh_data.indices
 	arr_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 
 	# Assign the generated mesh to this MeshInstance
@@ -645,10 +647,10 @@ func _ready():
 	assert(world, "World is missing.")
 	
 	# Apply Transformations
-	if position_4d != Vector4.ZERO: translate_mesh(position_4d)
 	if scale_4d != Vector4.ONE: scale_mesh(scale_4d)
 	if rotation_3d_planes != Vector3.ZERO: rotate_xy_yz_xz(rotation_3d_planes)
 	if rotation_4d_planes != Vector3.ZERO: rotate_wx_wy_wz(rotation_4d_planes)
+	if position_4d != Vector4.ZERO: translate_mesh(position_4d)
 	
 	# Create the initial mesh and connect world subspace changes to mesh recreation
 	create_mesh()

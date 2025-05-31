@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4o6df7wispq8"]
+
+[ext_resource type="Script" uid="uid://occ5qdlv4txy" path="res://Entities/RotateCam/rotate_cam.gd" id="1_7kaq7"]
+
+[node name="RotateCam" type="Node3D"]
+script = ExtResource("1_7kaq7")
+
+[node name="Pivot" type="Node3D" parent="."]
+transform = Transform3D(0.996792, 0, -0.0593321, 0, 0.999993, 0, 0.059328, 0, 0.996791, 0, 0, 0)
+
+[node name="Camera" type="Camera3D" parent="Pivot"]
+transform = Transform3D(1.00001, 8.32122e-07, -4.06483e-06, 0, 0.980901, 0.200803, 4.14401e-06, -0.200803, 0.980901, 0, 5, 24.4949)

@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://ow6qujwsy0is"]
+[gd_scene load_steps=11 format=4 uid="uid://ow6qujwsy0is"]
 
 [ext_resource type="Script" uid="uid://bpw7lxc6jfhah" path="res://Levels/Scripts/world4d.gd" id="1_1ot53"]
-[ext_resource type="PackedScene" uid="uid://bh6mpc546vq18" path="res://Objects/4D/4dmesh.tscn" id="2_m5bqa"]
+[ext_resource type="PackedScene" uid="uid://c4o6df7wispq8" path="res://Entities/RotateCam/RotateCam.tscn" id="2_1ot53"]
+[ext_resource type="PackedScene" uid="uid://bh6mpc546vq18" path="res://Objects/4D/mesh4d.tscn" id="2_m5bqa"]
 [ext_resource type="PackedScene" uid="uid://dhb3ohnsgp208" path="res://Entities/Freecam/freecam.tscn" id="3_1r5jd"]
-[ext_resource type="PackedScene" uid="uid://clgm2yftgiank" path="res://UI/4DRotationViewer/4d_rotation_viewer.tscn" id="4_mggor"]
+[ext_resource type="PackedScene" uid="uid://clgm2yftgiank" path="res://UI/4DRotationViewer/rotation_viewer_4d.tscn" id="4_mggor"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rpvnr"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -13,43 +14,94 @@ ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
 sky_material = SubResource("ProceduralSkyMaterial_rpvnr")
 
 [sub_resource type="Environment" id="Environment_da1h1"]
-background_mode = 2
+background_mode = 1
+background_color = Color(0.054902, 0.0705882, 0.0784314, 1)
 sky = SubResource("Sky_f6ubm")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_f6ubm"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mggor"]
+cull_mode = 2
+albedo_color = Color(0.988235, 0.384314, 0.333333, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_1ot53"]
 _surfaces = [{
-"aabb": AABB(0, 0, 0, 1, 1, 1),
+"aabb": AABB(-8.99258, -2.7646, -2.17374, 18.7158, 13.4231, 16.4195),
 "format": 34359742465,
-"index_count": 3,
-"index_data": PackedByteArray(0, 0, 1, 0, 2, 0),
+"index_count": 126,
+"index_data": PackedByteArray("AAABAAIAAwABAAIABAADAAIABAACAAUABgADAAcABgAHAAgACQAKAAsACQALAAwADQALAAwADgANAAwADgAMAA8AEAANABEAEAARABIAAAATABQAFQATABQACQAVABQACgAVABMADQAWABcADgANABcAEAANABYABAAXABYABAAWAAYAAAATAAEAGAATAAEAEwAKABIAEwASABgACAAYAAcABQAZABoAFwAZABoADwAOABcADwAXABoABAAXABsAAAAUAAIAHAAUAAIAFAAJAA8AFAAPABwABQAcAAIACAAdAB4AFgAdAB4AEgAQABYAEgAWAB4ABgAWAB8A"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 3,
-"vertex_data": PackedByteArray(0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63)
+"vertex_count": 32,
+"vertex_data": PackedByteArray("AAAAAAAAAAAAAAAAlkgWwIbZ9z/4nuxAKiW2QFIoz7+r6yxA/Vm+QMCtqb0HyllBGrHnQPecN7/u8EZBPpIbQTnvMMBIsZNAYBqoQHZihD7N7mNBl0gWwITZ9z/5nuxAPJBPwIEoK0BqZyNBXIqSwCLZ9EB8HgvAgC/PwG1QCUGgKuS+XsMEwUZeIUFLdKlACP3aPmxKx0DY5U8+gb00P9Gd/ED5rkBBzgxEPzyt+0Cbzz9BvlJ+QMAGp0B5cfE/KoAsP0kf/UAuJ0FBXsMEwUZeIUFMdKlAneEPwU6JKkHsee9AalOpwM5x4EAQebq+Cc2CwLWM2kBvWvi/T8KnwIZE/0B/2Mi/4Eg0Pxh/+0BNYkFBEDhbP3vW90Ae6T9BAmaowOxPr0BiERRByJsQQVLGDMBWvNhAPHX8QDAcX74mrG9AyJsQQVDGDMBWvNhAvhO/QMyIHEBzZjVA+AiPPrId1j88KD5B/z7kwA82AUEc3QVBCAmPPrMd1j87KD5B")
 }]
 
 [node name="TestWorld" type="Node3D"]
 script = ExtResource("1_1ot53")
 
+[node name="RotateCam" parent="." instance=ExtResource("2_1ot53")]
+rotation_time = 2.5
+camera_height = 15.0
+distance = 30.0
+
+[node name="4DRotationViewer" parent="RotateCam" node_paths=PackedStringArray("world_4d") instance=ExtResource("4_mggor")]
+world_4d = NodePath("../..")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 4.90031, 0)
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_da1h1")
 
 [node name="Mesh" parent="." node_paths=PackedStringArray("world") instance=ExtResource("2_m5bqa")]
-transform = Transform3D(1, 0.000124595, -0.00057199, -0.000123475, 0.999998, 0.00195636, 0.000572233, -0.00195629, 0.999998, 0, 0, 0)
-mesh = SubResource("ArrayMesh_f6ubm")
+transform = Transform3D(1, 0.000124595, -0.00057199, -0.000123475, 0.999998, 0.00195636, 0.000572233, -0.00195629, 0.999998, -5, -2, -5)
+material_override = SubResource("StandardMaterial3D_mggor")
+mesh = SubResource("ArrayMesh_1ot53")
 world = NodePath("..")
-position_4d = Vector4(0, 0, 0, 1)
 scale_4d = Vector4(10, 10, 10, 10)
-rotation_4d_planes = Vector3(0, 0, 45)
+rotation_3d_planes = Vector3(45, 45, 45)
+rotation_4d_planes = Vector3(45, 45, 45)
 
 [node name="FreeCam" parent="." instance=ExtResource("3_1r5jd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.705025, 4.8791)
+visible = false
 
 [node name="4DRotationViewer" parent="FreeCam" node_paths=PackedStringArray("world_4d") instance=ExtResource("4_mggor")]
+visible = false
 world_4d = NodePath("../..")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.82594)
+omni_range = 63.7659
+omni_attenuation = 0.535
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 24.9416)
+omni_range = 63.7659
+omni_attenuation = 0.535
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.3814, 0, -15.7872)
+omni_range = 63.7659
+omni_attenuation = 0.535
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D/OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45.972, 0, -15.7872)
+omni_range = 63.7659
+omni_attenuation = 0.535
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D/OmniLight3D/OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 54.731, 0, -15.7872)
+omni_range = 63.7659
+omni_attenuation = 0.535
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D/OmniLight3D/OmniLight3D/OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.394, 0, 68.3671)
+omni_range = 63.7659
+omni_attenuation = 0.535
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D/OmniLight3D/OmniLight3D/OmniLight3D/OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -86.8399, 0, 15.2305)
+omni_range = 63.7659
+omni_attenuation = 0.535

@@ -8,8 +8,8 @@ extends CharacterBody3D
 # EXPORTS
 @export var speed = 20.0
 
-@onready var movement_hardness: float = 20.0
-@onready var sensibility_hardness: float = 20.0
+@onready var movement_hardness: float = 10.0
+@onready var sensibility_hardness: float = 10.0
 
 @export var target_rotation: Vector3
 @export var sensibility: float = 1.0

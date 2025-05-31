@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://clgm2yftgiank"]
 
 [ext_resource type="PackedScene" uid="uid://bg2puptso2rf8" path="res://UI/4DRotationViewer/rotation_sphere.tscn" id="1_4edjm"]
-[ext_resource type="Script" uid="uid://cy3srny42n6dj" path="res://UI/4DRotationViewer/Scripts/4d_rotation_viewer.gd" id="2_e1ohx"]
+[ext_resource type="Script" uid="uid://cy3srny42n6dj" path="res://UI/4DRotationViewer/Scripts/rotation_viewer4d.gd" id="2_e1ohx"]
 
-[node name="4DRotationViewer" type="SubViewportContainer"]
+[node name="RotationViewer4D" type="SubViewportContainer"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
