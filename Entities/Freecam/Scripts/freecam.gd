@@ -1,5 +1,10 @@
 extends CharacterBody3D
 
+
+# ------------ #
+#     VARS     #
+# ------------ #
+
 # EXPORTS
 @export var speed = 20.0
 
@@ -13,6 +18,17 @@ extends CharacterBody3D
 var target_velocity: Vector3 = Vector3.ZERO
 var _is_captured: bool = true
 
+
+
+# ------------- #
+#     UTILS     #
+# ------------- #
+
+# Interpolates each component of a rotation vector using angle lerp
+func lerp_angles(from: Vector3, to: Vector3, weight: float):
+	var v := from
+	return Vector3(lerp_angle(from.x, to.x, weight), lerp_angle(from.y, to.y, weight), lerp_angle(from.z, to.z, weight))
+
 # Capture or release the mouse pointer
 func _capture_mouse(capture: bool) -> void:
 	_is_captured = capture
@@ -21,14 +37,14 @@ func _capture_mouse(capture: bool) -> void:
 	else:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
+
+# ------------ #
+#     MAIN     #
+# ------------ #
+
 # Called on node initialization
 func _ready() -> void:
 	_capture_mouse(true)
-
-# Interpolates each component of a rotation vector using angle lerp
-func lerp_angles(from: Vector3, to: Vector3, weight: float):
-	var v := from
-	return Vector3(lerp_angle(from.x, to.x, weight), lerp_angle(from.y, to.y, weight), lerp_angle(from.z, to.z, weight))
 
 # Called each physics frame
 func _physics_process(delta: float) -> void:

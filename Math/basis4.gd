@@ -1,10 +1,20 @@
 class_name Basis4
 
+
+# ------------ #
+#     VARS     #
+# ------------ #
+
 # 4x4 matrix representation using four Vector4 columns
 var i: Vector4
 var j: Vector4
 var k: Vector4
 var l: Vector4
+
+
+# ----------------------- #
+#     CLASS FUNCTIONS     #
+# ----------------------- #
 
 # Initialize Basis4 with optional column vectors
 func _init(i_vec := Vector4(1,0,0,0), 

@@ -9,6 +9,7 @@ extends MeshInstance3D
 #     VARS     #
 # ------------ #
 
+# EXPORTS
 # Reference to the 4D world object holding the current 3D subspace
 @export var world: World4D
 
@@ -18,15 +19,14 @@ extends MeshInstance3D
 # Scaling factors along each 4D axis
 @export var scale_4d := Vector4.ONE
 
-# XY, YZ, XZ rotations
-@export var rotation_3d_planes := Vector3.ZERO
-# XW, YW, ZW rotations
-@export var rotation_4d_planes := Vector3.ZERO
+# Rotations in 4D World
+@export var rotation_3d_planes := Vector3.ZERO  # XY, YZ, XZ rotations
+@export var rotation_4d_planes := Vector3.ZERO  # XW, YW, ZW rotations
 
-# Helpers
+# HELPERS
 var intersect =  Intersect4D.new()
 
-# Model
+# MODEL
 var tetrahedrons = [
 	Basis4.new(
 		Vector4(0, 0, 0, 0),
