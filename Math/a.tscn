@@ -1,0 +1,103 @@
+[gd_scene load_steps=10 format=3 uid="uid://ow6qujwsy0is"]
+
+[ext_resource type="Script" uid="uid://bpw7lxc6jfhah" path="res://Math/4dworld.gd" id="1_kjbhn"]
+[ext_resource type="PackedScene" uid="uid://bh6mpc546vq18" path="res://Math/mesh.tscn" id="1_lq6el"]
+[ext_resource type="PackedScene" uid="uid://dhb3ohnsgp208" path="res://Math/freecam.tscn" id="2_igxe8"]
+[ext_resource type="PackedScene" uid="uid://bg2puptso2rf8" path="res://Math/sphere.tscn" id="3_eh1hl"]
+[ext_resource type="Script" uid="uid://cy3srny42n6dj" path="res://Math/sphere.gd" id="5_rpvnr"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rpvnr"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_f6ubm"]
+sky_material = SubResource("ProceduralSkyMaterial_rpvnr")
+
+[sub_resource type="Environment" id="Environment_da1h1"]
+background_mode = 2
+sky = SubResource("Sky_f6ubm")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_f6ubm"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 1, 1, 1),
+"format": 34359742465,
+"index_count": 3,
+"index_data": PackedByteArray(0, 0, 1, 0, 2, 0),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 3,
+"vertex_data": PackedByteArray(0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63)
+}]
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_kjbhn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_da1h1")
+
+[node name="Mesh" parent="." node_paths=PackedStringArray("world") instance=ExtResource("1_lq6el")]
+transform = Transform3D(1, 0.000124595, -0.00057199, -0.000123475, 0.999998, 0.00195636, 0.000572233, -0.00195629, 0.999998, 0, 0, 0)
+mesh = SubResource("ArrayMesh_f6ubm")
+world = NodePath("..")
+position_4d = null
+scale_4d = null
+rotation_3d_planes = null
+rotation_4d_planes = null
+
+[node name="FreeCam" parent="." instance=ExtResource("2_igxe8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.705025, 4.8791)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="FreeCam"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -320.0
+offset_bottom = 320.0
+grow_horizontal = 0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="FreeCam/SubViewportContainer"]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(320, 320)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="FreeCam/SubViewportContainer/SubViewport"]
+projection = 1
+size = 2.0
+
+[node name="Sphere" parent="FreeCam/SubViewportContainer/SubViewport/Camera3D" node_paths=PackedStringArray("plane") instance=ExtResource("3_eh1hl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.70292)
+script = ExtResource("5_rpvnr")
+plane = NodePath("../../../../..")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="FreeCam/SubViewportContainer/SubViewport"]
+omni_range = 10000.0
+omni_attenuation = 2.0
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="FreeCam/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+omni_range = 10000.0
+omni_attenuation = 2.0
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="FreeCam/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+omni_range = 10000.0
+omni_attenuation = 2.0
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="FreeCam/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+omni_range = 10000.0
+omni_attenuation = 2.0
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="FreeCam/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+omni_range = 10000.0
+omni_attenuation = 2.0

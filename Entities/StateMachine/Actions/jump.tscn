@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://64po28s6m7p8"]
+
+[ext_resource type="Script" uid="uid://cg7gh0m36aq3w" path="res://Entities/StateMachine/Scripts/Actions/jump.gd" id="1_20tn5"]
+
+[node name="Jump" type="Node3D" node_paths=PackedStringArray("fall_state", "idle_state", "move_state")]
+script = ExtResource("1_20tn5")
+fall_state = NodePath("")
+idle_state = NodePath("")
+move_state = NodePath("")

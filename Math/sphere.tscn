@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3 uid="uid://bg2puptso2rf8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ecmwi"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ecmwi"]
+material = SubResource("StandardMaterial3D_ecmwi")
+radial_segments = 24
+rings = 24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mrdnm"]
+albedo_color = Color(0.960784, 0.239216, 0.392157, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_sggo3"]
+material = SubResource("StandardMaterial3D_mrdnm")
+radius = 0.25
+height = 0.5
+radial_segments = 24
+rings = 24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4l8x0"]
+albedo_color = Color(0.2, 0.662745, 0.960784, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_yxrqk"]
+material = SubResource("StandardMaterial3D_4l8x0")
+radius = 0.25
+height = 0.5
+radial_segments = 24
+rings = 24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5cpdw"]
+albedo_color = Color(0.662745, 0.917647, 0.0823529, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_dhxor"]
+material = SubResource("StandardMaterial3D_5cpdw")
+radius = 0.25
+height = 0.5
+radial_segments = 24
+rings = 24
+
+[node name="Sphere" type="Node3D"]
+
+[node name="MainSphere" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_ecmwi")
+
+[node name="X1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, 0)
+mesh = SubResource("SphereMesh_sggo3")
+skeleton = NodePath("../MainSphere")
+
+[node name="X2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0, 0)
+mesh = SubResource("SphereMesh_sggo3")
+skeleton = NodePath("../MainSphere")
+
+[node name="Z1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4)
+mesh = SubResource("SphereMesh_yxrqk")
+skeleton = NodePath("../MainSphere")
+
+[node name="Z2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.4)
+mesh = SubResource("SphereMesh_yxrqk")
+skeleton = NodePath("../MainSphere")
+
+[node name="Y1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("SphereMesh_dhxor")
+skeleton = NodePath("../MainSphere")
+
+[node name="Y2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+mesh = SubResource("SphereMesh_dhxor")
+skeleton = NodePath("../MainSphere")

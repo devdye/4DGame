@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cotxf8gi3ubfd"]
+
+[ext_resource type="Script" uid="uid://bi85b2if800d" path="res://Entities/StateMachine/Scripts/Actions/fall.gd" id="1_qdpvm"]
+
+[node name="Fall" type="Node3D"]
+script = ExtResource("1_qdpvm")
