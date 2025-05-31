@@ -6,7 +6,7 @@
 script = ExtResource("1_7kaq7")
 
 [node name="Pivot" type="Node3D" parent="."]
-transform = Transform3D(0.996792, 0, -0.0593321, 0, 0.999993, 0, 0.059328, 0, 0.996791, 0, 0, 0)
+transform = Transform3D(-0.913794, 0, -0.402579, 0, 0.999993, 0, 0.402582, 0, -0.913796, 0, 0, 0)
 
 [node name="Camera" type="Camera3D" parent="Pivot"]
-transform = Transform3D(1.00001, 8.32122e-07, -4.06483e-06, 0, 0.980901, 0.200803, 4.14401e-06, -0.200803, 0.980901, 0, 5, 24.4949)
+transform = Transform3D(1.00001, 8.42587e-07, -4.11587e-06, 0, 0.9809, 0.200806, 4.19604e-06, -0.200807, 0.9809, 0, 5, 24.4949)

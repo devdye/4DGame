@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://ccwmmhni7q0jk" path="res://Objects/4D/Scripts/mesh4d.gd" id="1_g1j0d"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ia0h7"]
+cull_mode = 1
+albedo_color = Color(0.988235, 0.384314, 0.333333, 1)
 
 [node name="MeshInstance4D" type="MeshInstance3D"]
 material_override = SubResource("StandardMaterial3D_ia0h7")

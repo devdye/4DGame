@@ -565,47 +565,53 @@ func get_triangles_from_points(points: Array) -> Array:
 	# Return the two triangles as arrays of Vector3
 	return [tri_a, tri_b]
 
-# Builds a vertex array and index array from a list of triangles
 func build_vertices_and_indices(triangles: Array) -> Dictionary:
-	var raw_vertices := []  # Temporary list to collect unique Vector3 vertices
-	var raw_indices := []  # Temporary list to collect triangle indices
-	var idx_map := {}  # Map from Vector3 to its index in raw_vertices
+	var raw_vertices := []
+	var raw_indices := []
+	var idx_map := {}
+	var vertex_normals := []
 
-	# Loop over each triangle or triangle group
 	for tri in triangles:
 		var tris := []
-		
-		# If tri is already a single triangle, wrap in array
 		if tri.size() == 3 and tri[0] is Vector3:
 			tris = [tri]
 		else:
 			tris = tri
 
-		# Process each individual triangle
 		for single_tri in tris:
-			assert(single_tri.size() == 3)
-			
-			# For each vertex, assign or reuse an index
+			assert(single_tri.size() == 3, "Each triangle must have exactly 3 vertices")
+
 			for v in single_tri:
 				if not idx_map.has(v):
-					idx_map[v] = raw_vertices.size()
+					var idx = raw_vertices.size()
 					raw_vertices.append(v)
+					vertex_normals.append(Vector3.ZERO)
+					idx_map[v] = idx
 				raw_indices.append(idx_map[v])
 
-	# Convert raw_vertices to a PackedVector3Array
-	var vertices = PackedVector3Array()
-	for v in raw_vertices:
-		vertices.append(v)
+			var A = single_tri[0]
+			var B = single_tri[1]
+			var C = single_tri[2]
+			var AB = B - A
+			var AC = C - A
+			var face_normal = AB.cross(AC).normalized()
 
-	# Convert raw_indices to a PackedInt32Array
-	var indices = PackedInt32Array()
-	for i in raw_indices:
-		indices.append(i)
+			for i in range(3):
+				var vertex_index = idx_map[single_tri[i]]
+				vertex_normals[vertex_index] += face_normal
 
-	# Return dictionary containing vertices and indices
+	for i in range(vertex_normals.size()):
+		if vertex_normals[i] != Vector3.ZERO:
+			vertex_normals[i] = vertex_normals[i].normalized()
+
+	var vertices = PackedVector3Array(raw_vertices)
+	var indices = PackedInt32Array(raw_indices)
+	var normals = PackedVector3Array(vertex_normals)
+
 	return {
 		"vertices": vertices,
 		"indices": indices,
+		"normals": normals
 	}
 
 # Creates a mesh by intersecting each tetrahedron with a hyperplane
@@ -627,6 +633,32 @@ func create_mesh():
 			var ts = get_triangles_from_points(inter)
 			raw_tris.append(ts[0])
 			raw_tris.append(ts[1])
+
+	# Compute centroid of all unique vertices
+	var all_vertices = []
+	for tri in raw_tris:
+		for v in tri:
+			if not all_vertices.any(func(existing): return existing.distance_to(v) < 1e-5):
+				all_vertices.append(v)
+	
+	var centroid = Vector3.ZERO
+	for v in all_vertices:
+		centroid += v
+	if all_vertices.size() > 0:
+		centroid /= all_vertices.size()
+
+	# Adjust triangle winding to ensure outward normals
+	for tri in raw_tris:
+		var tri_center = (tri[0] + tri[1] + tri[2]) / 3.0
+		var to_center = tri_center - centroid
+		var AB = tri[1] - tri[0]
+		var AC = tri[2] - tri[0]
+		var normal = AB.cross(AC).normalized()
+		if normal.dot(to_center) < 0:
+			# Flip winding: swap tri[1] and tri[2]
+			var temp = tri[1]
+			tri[1] = tri[2]
+			tri[2] = temp
 
 	# Build vertex and index arrays from collected triangles
 	var mesh_data = build_vertices_and_indices(raw_tris)
