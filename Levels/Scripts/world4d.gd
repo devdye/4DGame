@@ -1,13 +1,14 @@
 class_name World4D
 extends Node3D
 
+
 # ------------ #
 #     VARS     #
 # ------------ #
 
 # EXPORTS
 @export var sensibility: float = 1.0
-@export var movement_hardness: float = 10.0
+@export var movement_hardness: float = 5.0
 
 # OBJECTS
 var subspace3D: Subspace3D = Subspace3D.new()
@@ -19,6 +20,7 @@ var target_rot: Vector3 = Vector3.ZERO
 
 # SIGNALS
 signal subspace_change
+
 
 # ------------- #
 #     UTILS     #
@@ -43,6 +45,7 @@ func wrap_angles(v: Vector3) -> Vector3:
 		fmod(v.y, TAU),
 		fmod(v.z, TAU)
 	)
+
 
 # ------------- #
 #     UTILS     #

@@ -44,6 +44,9 @@ environment = SubResource("Environment_da1h1")
 transform = Transform3D(1, 0.000124595, -0.00057199, -0.000123475, 0.999998, 0.00195636, 0.000572233, -0.00195629, 0.999998, 0, 0, 0)
 mesh = SubResource("ArrayMesh_f6ubm")
 world = NodePath("..")
+position_4d = Vector4(0, 0, 0, 1)
+scale_4d = Vector4(10, 10, 10, 10)
+rotation_4d_planes = Vector3(0, 0, 45)
 
 [node name="FreeCam" parent="." instance=ExtResource("3_1r5jd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.705025, 4.8791)
