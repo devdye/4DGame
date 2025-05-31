@@ -502,22 +502,28 @@ func rotate_wx_wy_wz(angle_xw: float, angle_yw: float, angle_zw: float):
 	tetrahedrons = new_tetrahedrons
 
 
-func get_triangles_from_points(points : Array) -> Array:
+# Extracts two triangles from four coplanar points by ordering them CCW
+func get_triangles_from_points(points: Array[Vector3]) -> Array:
 	# Expect exactly 4 distinct, coplanar Vector3s
 	if points.size() != 4:
 		return []
 
-	# ------------------------------------------------------------------
-	# 1) Build a 2-D basis in the plane of the quad
-	# ------------------------------------------------------------------
-	var p0  = points[0]
-	var n   = ((points[1] - p0).cross(points[2] - p0))
+	# 1)  Build a 2-D basis in the plane of the quad
+	
+	# Define Point 0 and Normal
+	var p0: Vector3 = points[0]
+	var n: Vector3 = ((points[1] - p0).cross(points[2] - p0))
+	
+	# If those points are collinear, use a different cross
 	if n.length_squared() < 1e-8:
 		n = ((points[1] - p0).cross(points[3] - p0))
+	
+	# Normalize the plane normal
 	n = n.normalized()
 
-	var u = (points[1] - p0).normalized()  # first in-plane axis
-	var v = n.cross(u)                     # second in-plane axis
+	# First axis in the plane and Second axis in the plane perpendicular to u
+	var u = (points[1] - p0).normalized()
+	var v = n.cross(u)                     
 
 	# Project every 3-D point into that 2-D basis
 	var poly_2d := []
@@ -525,86 +531,108 @@ func get_triangles_from_points(points : Array) -> Array:
 		var d = p - p0
 		poly_2d.append(Vector2(d.dot(u), d.dot(v)))
 
-	# ------------------------------------------------------------------
-	# 2) Order the four vertices CCW around their centre
-	# ------------------------------------------------------------------
+	# 2)  Order the four vertices CCW around their centre
+	
+	# Compute center of projected points
 	var centre := Vector2()
 	for p in poly_2d:
 		centre += p
 	centre /= 4.0
 
+	# Initialize index order
 	var order := [0, 1, 2, 3]
+	
+	# Sort indices by angle around centre
 	order.sort_custom(func(a, b):
 		return atan2(poly_2d[a].y - centre.y, poly_2d[a].x - centre.x) \
 			< atan2(poly_2d[b].y - centre.y, poly_2d[b].x - centre.x)
 	)
 
-	# ------------------------------------------------------------------
 	# 3) Fan-triangulate: 0-1-2 and 0-2-3
-	# ------------------------------------------------------------------
+	
+	# Build first triangle from ordered vertices
 	var tri_a := [points[order[0]], points[order[1]], points[order[2]]]
+	
+	# Build second triangle from ordered vertices
 	var tri_b := [points[order[0]], points[order[2]], points[order[3]]]
 
+	# If winding is inverted, swap to correct orientation
 	if ((tri_a[1] - tri_a[0]).cross(tri_a[2] - tri_a[0])).dot(n) < 0.0:
 		# Flip winding of each triangle
 		var tmp = tri_a[1]; tri_a[1] = tri_a[2]; tri_a[2] = tmp
 		tmp = tri_b[1];       tri_b[1] = tri_b[2]; tri_b[2] = tmp
 
+	# Return the two triangles as arrays of Vector3
 	return [tri_a, tri_b]
 
 
+# Builds a vertex array and index array from a list of triangles
 func build_vertices_and_indices(triangles: Array) -> Dictionary:
-	
-	var raw_vertices := []            # temporary Array of Vector3
-	var raw_indices := []             # temporary Array of int
-	var idx_map := {}                 # Dictionary<Vector3, int>
+	var raw_vertices := []  # Temporary list to collect unique Vector3 vertices
+	var raw_indices := []  # Temporary list to collect triangle indices
+	var idx_map := {}  # Map from Vector3 to its index in raw_vertices
 
+	# Loop over each triangle or triangle group
 	for tri in triangles:
 		var tris := []
+		
+		# If tri is already a single triangle, wrap in array
 		if tri.size() == 3 and tri[0] is Vector3:
 			tris = [tri]
 		else:
 			tris = tri
 
+		# Process each individual triangle
 		for single_tri in tris:
 			assert(single_tri.size() == 3)
+			
+			# For each vertex, assign or reuse an index
 			for v in single_tri:
 				if not idx_map.has(v):
 					idx_map[v] = raw_vertices.size()
 					raw_vertices.append(v)
 				raw_indices.append(idx_map[v])
 
-	# now convert to Packed arrays
+	# Convert raw_vertices to a PackedVector3Array
 	var vertices = PackedVector3Array()
 	for v in raw_vertices:
 		vertices.append(v)
 
+	# Convert raw_indices to a PackedInt32Array
 	var indices = PackedInt32Array()
 	for i in raw_indices:
 		indices.append(i)
 
+	# Return dictionary containing vertices and indices
 	return {
 		"vertices": vertices,
 		"indices": indices,
 	}
 
-
+# Creates a mesh by intersecting each tetrahedron with a hyperplane
 func create_mesh():
 	var raw_tris := []
-	for tetra in tetrahedrons:
+	
+	for tetrahedron in tetrahedrons:
+		# Compute intersection polygon with the world hyperplane
 		var inter = intersect.get_tetrahedron_intersect(
-			world.subspace3D, tetra.i, tetra.j, tetra.k, tetra.l
+			world.subspace3D, tetrahedron.i, tetrahedron.j, tetrahedron.k, tetrahedron.l
 		)
+		
+		# If intersection is a triangle, use directly
 		if inter.size() == 3:
 			raw_tris.append(inter)
+		
+		# If intersection is a quad, split into two triangles
 		elif inter.size() == 4:
 			var ts = get_triangles_from_points(inter)
-			
 			raw_tris.append(ts[0])
 			raw_tris.append(ts[1])
 
+	# Build vertex and index arrays from collected triangles
 	var mesh_data = build_vertices_and_indices(raw_tris)
 
+	# Construct an ArrayMesh for rendering
 	var arr_mesh = ArrayMesh.new()
 	var arrays := []
 	arrays.resize(ArrayMesh.ARRAY_MAX)
@@ -612,13 +640,16 @@ func create_mesh():
 	arrays[ArrayMesh.ARRAY_INDEX]  = mesh_data.indices
 	arr_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 
-	mesh = arr_mesh   # if this script is on a MeshInstanc
+	# Assign the generated mesh to this MeshInstance
+	mesh = arr_mesh
 
+# Called when node is added to scene, sets up mesh updates
 func _ready():
 	assert(world, "World is missing.")
 	
+	# Apply Transformations
 	scale_mesh(scale_4d)
 	
+	# Create the initial mesh and connect world subspace changes to mesh recreation
 	create_mesh()
-	
 	world.subspace_change.connect(create_mesh)
