@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3 uid="uid://ow6qujwsy0is"]
+
+[ext_resource type="Script" uid="uid://bpw7lxc6jfhah" path="res://Levels/Scripts/world4d.gd" id="1_1ot53"]
+[ext_resource type="PackedScene" uid="uid://bh6mpc546vq18" path="res://Objects/4D/4dmesh.tscn" id="2_m5bqa"]
+[ext_resource type="PackedScene" uid="uid://dhb3ohnsgp208" path="res://Entities/Freecam/freecam.tscn" id="3_1r5jd"]
+[ext_resource type="PackedScene" uid="uid://clgm2yftgiank" path="res://UI/4DRotationViewer/4d_rotation_viewer.tscn" id="4_mggor"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rpvnr"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_f6ubm"]
+sky_material = SubResource("ProceduralSkyMaterial_rpvnr")
+
+[sub_resource type="Environment" id="Environment_da1h1"]
+background_mode = 2
+sky = SubResource("Sky_f6ubm")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_f6ubm"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 1, 1, 1),
+"format": 34359742465,
+"index_count": 3,
+"index_data": PackedByteArray(0, 0, 1, 0, 2, 0),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 3,
+"vertex_data": PackedByteArray(0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63)
+}]
+
+[node name="TestWorld" type="Node3D"]
+script = ExtResource("1_1ot53")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_da1h1")
+
+[node name="Mesh" parent="." node_paths=PackedStringArray("world") instance=ExtResource("2_m5bqa")]
+transform = Transform3D(1, 0.000124595, -0.00057199, -0.000123475, 0.999998, 0.00195636, 0.000572233, -0.00195629, 0.999998, 0, 0, 0)
+mesh = SubResource("ArrayMesh_f6ubm")
+world = NodePath("..")
+
+[node name="FreeCam" parent="." instance=ExtResource("3_1r5jd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.705025, 4.8791)
+
+[node name="4DRotationViewer" parent="FreeCam" node_paths=PackedStringArray("world_4d") instance=ExtResource("4_mggor")]
+world_4d = NodePath("../..")

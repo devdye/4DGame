@@ -41,7 +41,7 @@ func get_intersect(hyperplane: Subspace3D, a: Vector4, b: Vector4):
 	
 	# Compute the 4D intersection point using linear interpolation and verify if it lies within the segment
 	var t: float = -n.dot(a) / denom
-	if (t <= 0.0 or t >= 1.0): return null
+	if (t < 0.0 or t > 1.0): return null
 	
 	# Compute the 4D intersection point using linear interpolation
 	var inter: Vector4 = (1 - t) * a + t * b

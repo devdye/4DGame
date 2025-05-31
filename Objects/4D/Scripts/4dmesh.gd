@@ -2,27 +2,26 @@
 # It defines a list of tetrahedra (Basis4 objects), functions to scale and rotate them in 4D space,
 # computes 3D triangle faces from intersections with a 3D subspace, and builds the resulting mesh.
 
-@tool
 extends MeshInstance3D
 
 
-# ----------- #
-#     VARS    #
-# ----------- #
+# ------------ #
+#     VARS     #
+# ------------ #
 
 # Reference to the 4D world object holding the current 3D subspace
 @export var world: World4D
 
 # Position in the 4D World
-@export var position_4d := Vector4(0.0, 0.0, 0.0, 0.0)
+@export var position_4d := Vector4.ZERO
 
 # Scaling factors along each 4D axis
-@export var scale_4d := Vector4(1.0, 1.0, 1.0, 1.0)
+@export var scale_4d := Vector4.ONE
 
 # XY, YZ, XZ rotations
-@export var rotation_3d_planes := Vector3(0.0, 0.0, 0.0)
+@export var rotation_3d_planes := Vector3.ZERO
 # XW, YW, ZW rotations
-@export var rotation_4d_planes := Vector3(0.0, 0.0, 0.0)
+@export var rotation_4d_planes := Vector3.ZERO
 
 # Helpers
 var intersect =  Intersect4D.new()
@@ -448,14 +447,14 @@ func rotate_zw(angle: float):
 	tetrahedrons = new_tetrahedrons 
 
 # Rotate around XY, YZ and XZ axes (3D axes).
-func rotate_xy_yz_xz(angle_xy: float, angle_yz: float, angle_xz: float):
+func rotate_xy_yz_xz(rotation_angles: Vector3):
 	# Precalculate cos and sin
-	var c1 := cos(angle_xy)
-	var s1 := sin(angle_xy)
-	var c2 := cos(angle_yz)
-	var s2 := sin(angle_yz)
-	var c3 := cos(angle_xz)
-	var s3 := sin(angle_xz)
+	var c1 := cos(rotation_angles.x)
+	var s1 := sin(rotation_angles.x)
+	var c2 := cos(rotation_angles.y)
+	var s2 := sin(rotation_angles.y)
+	var c3 := cos(rotation_angles.z)
+	var s3 := sin(rotation_angles.z)
 	
 	# Define the 4D Rotation Matrix (R = R_xy * R_yz * R_xz)
 	var rotation_matrix := Basis4.new(
@@ -475,14 +474,14 @@ func rotate_xy_yz_xz(angle_xy: float, angle_yz: float, angle_xz: float):
 	tetrahedrons = new_tetrahedrons
 
 # Rotate around XW, YW and ZW axes (4D axes).
-func rotate_wx_wy_wz(angle_xw: float, angle_yw: float, angle_zw: float):
+func rotate_wx_wy_wz(rotation_angles: Vector3): 
 	# Precalculate cos and sin
-	var cX := cos(angle_xw)
-	var sX := sin(angle_xw)
-	var cY := cos(angle_yw)
-	var sY := sin(angle_yw)
-	var cZ := cos(angle_zw)
-	var sZ := sin(angle_zw)
+	var cX := cos(rotation_angles.x)
+	var sX := sin(rotation_angles.x)
+	var cY := cos(rotation_angles.y)
+	var sY := sin(rotation_angles.y)
+	var cZ := cos(rotation_angles.z)
+	var sZ := sin(rotation_angles.z)
 
 	# Define the 4D Rotation Matrix (R = R_zw * R_yw * R_xw)
 	var rotation_matrix := Basis4.new(
@@ -501,9 +500,8 @@ func rotate_wx_wy_wz(angle_xw: float, angle_yw: float, angle_zw: float):
 	# Update vertices
 	tetrahedrons = new_tetrahedrons
 
-
 # Extracts two triangles from four coplanar points by ordering them CCW
-func get_triangles_from_points(points: Array[Vector3]) -> Array:
+func get_triangles_from_points(points: Array) -> Array:
 	# Expect exactly 4 distinct, coplanar Vector3s
 	if points.size() != 4:
 		return []
@@ -564,7 +562,6 @@ func get_triangles_from_points(points: Array[Vector3]) -> Array:
 
 	# Return the two triangles as arrays of Vector3
 	return [tri_a, tri_b]
-
 
 # Builds a vertex array and index array from a list of triangles
 func build_vertices_and_indices(triangles: Array) -> Dictionary:
@@ -648,7 +645,10 @@ func _ready():
 	assert(world, "World is missing.")
 	
 	# Apply Transformations
-	scale_mesh(scale_4d)
+	if position_4d != Vector4.ZERO: translate_mesh(position_4d)
+	if scale_4d != Vector4.ONE: scale_mesh(scale_4d)
+	if rotation_3d_planes != Vector3.ZERO: rotate_xy_yz_xz(rotation_3d_planes)
+	if rotation_4d_planes != Vector3.ZERO: rotate_wx_wy_wz(rotation_4d_planes)
 	
 	# Create the initial mesh and connect world subspace changes to mesh recreation
 	create_mesh()

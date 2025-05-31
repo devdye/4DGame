@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dhb3ohnsgp208"]
 
-[ext_resource type="Script" uid="uid://mxg37nm88tsw" path="res://Math/freecam.gd" id="1_hsbe3"]
+[ext_resource type="Script" uid="uid://mxg37nm88tsw" path="res://Entities/Freecam/Scripts/freecam.gd" id="1_hsbe3"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7o2e3"]
 radius = 0.127622

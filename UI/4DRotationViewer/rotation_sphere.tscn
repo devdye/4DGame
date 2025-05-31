@@ -37,7 +37,7 @@ height = 0.5
 radial_segments = 24
 rings = 24
 
-[node name="Sphere" type="Node3D"]
+[node name="RotationSphere" type="Node3D"]
 
 [node name="MainSphere" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_ecmwi")

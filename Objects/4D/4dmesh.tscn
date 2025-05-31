@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bh6mpc546vq18"]
 
-[ext_resource type="Script" uid="uid://ccwmmhni7q0jk" path="res://Math/mesh.gd" id="1_g1j0d"]
+[ext_resource type="Script" uid="uid://ccwmmhni7q0jk" path="res://Objects/4D/Scripts/4dmesh.gd" id="1_g1j0d"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g1j0d"]
 cull_mode = 2

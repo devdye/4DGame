@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dhraqaglxp5c0"]
+[gd_scene load_steps=2 format=3 uid="uid://bd1ctqyltjcxk"]
 
-[ext_resource type="PackedScene" uid="uid://bg2puptso2rf8" path="res://Math/sphere.tscn" id="1_mv8vv"]
+[ext_resource type="PackedScene" uid="uid://bg2puptso2rf8" path="res://UI/4DRotationViewer/rotation_sphere.tscn" id="1_mv8vv"]
 
 [node name="RotationViewer" type="Node3D"]
 
