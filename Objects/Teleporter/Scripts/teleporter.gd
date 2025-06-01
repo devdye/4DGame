@@ -21,3 +21,4 @@ func _on_body_entered(body: Node3D) -> void:
 	for group in groups:
 		if body.is_in_group(group):
 			body.global_position = new_position
+			body.rotation_degrees = new_rotation

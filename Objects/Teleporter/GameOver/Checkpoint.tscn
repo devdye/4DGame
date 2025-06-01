@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://co4wa8can2mrg"]
+
+[ext_resource type="Script" uid="uid://6cx2lbormyyq" path="res://Objects/Teleporter/GameOver/checkpoint.gd" id="1_jlpea"]
+
+[node name="Checkpoint" type="Area3D"]
+script = ExtResource("1_jlpea")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

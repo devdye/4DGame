@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjysv2xvtsqyl"]
+
+[ext_resource type="Script" uid="uid://2pt1s0n82whk" path="res://Objects/Teleporter/GameOver/death_teleporter.gd" id="1_mui64"]
+
+[node name="DeathTeleporter" type="Area3D"]
+script = ExtResource("1_mui64")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

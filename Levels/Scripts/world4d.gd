@@ -111,3 +111,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 		
 		print("Subspace Change!")
 		print(subspace3D)
+
+
+func _on_death_teleporter_body_entered(body: Node3D) -> void:
+	pass # Replace with function body.
