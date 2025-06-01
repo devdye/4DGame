@@ -15,7 +15,8 @@ extends MeshInstance3D
 # Reference to the 4D world object holding the current 3D subspace
 @export var world: World4D
 
-# Reference to the 3D Mesh
+# Reference to the 4D Mesh
+@export_file("*.txt") var mesh_file: String
 
 # Position in the 4D World
 @export var position_4d := Vector4.ZERO
@@ -31,13 +32,15 @@ extends MeshInstance3D
 var intersect =  Intersect4D.new()
 
 # MODEL
-var tetrahedrons = [
-	Basis4.new(
+var tetrahedrons = []
+
+
+"""
+Basis4.new(
 		Vector4(0, 0, 0, 0),
 		Vector4(0, 1, 0, 0),
 		Vector4(0, 0, 1, 0),
-		Vector4(0, 0, 0, 1),
-	),
+		Vector4(0, 0, 0, 1),),
 	Basis4.new(
 		Vector4(0, 1, 1, 1),
 		Vector4(0, 1, 0, 0),
@@ -150,72 +153,72 @@ var tetrahedrons = [
 		Vector4(0, 1, 1, 1),
 		Vector4(0, 1, 1, 0),
 		Vector4(0, 1, 0, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 0, 0, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 0, 1),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 0, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(1, 1, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 0, 1),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 0, 0, 1),
-		Vector4(1, 1, 0, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 0, 1),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 0, 1),
-		Vector4(1, 1, 0, 1),
-	),
-	Basis4.new(
-		Vector4(0, 0, 1, 0),
-		Vector4(1, 0, 1, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 1),
-		Vector4(1, 0, 1, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 0),
-		Vector4(1, 0, 1, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 1, 1),
-		Vector4(1, 0, 1, 0),
-		Vector4(0, 0, 1, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 1, 1),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 0, 1, 1),
 		Vector4(1, 1, 1, 1),
 	),
 	Basis4.new(
 		Vector4(0, 0, 0, 0),
 		Vector4(1, 0, 0, 0),
 		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 0, 1),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 0, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(1, 1, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 0, 1),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 0, 0, 1),
+		Vector4(1, 1, 0, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 0, 1),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 0, 1),
+		Vector4(1, 1, 0, 1),
+	),
+	Basis4.new(
+		Vector4(0, 0, 1, 0),
+		Vector4(1, 0, 1, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 1),
+		Vector4(1, 0, 1, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 0),
+		Vector4(1, 0, 1, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 1, 1),
+		Vector4(1, 0, 1, 0),
+		Vector4(0, 0, 1, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 1, 1),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 0, 1, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 0, 0, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
 		Vector4(0, 0, 1, 0),
 	),
 	Basis4.new(
@@ -271,13 +274,95 @@ var tetrahedrons = [
 		Vector4(0, 1, 0, 1),
 		Vector4(0, 0, 1, 1),
 		Vector4(1, 1, 1, 1),
-	),
-]
+	),"""
+	
+# ------------------- #
+#     MESH READER     #
+# ------------------- #
+
+# Read tetrahedrons from a text file and extract as Basis4 instances.
+func read_tetrahedrons_4d(input_file: String) -> Array:
+	var tetrahedrons = []
+	var current_vertices = []
+	
+	# Open and read the entire file at once for speed
+	var file := FileAccess.open(input_file, FileAccess.READ)
+	if not file:
+		return []  # Return empty array if file cannot be opened
+	var content = file.get_as_text()
+	file.close()
+	
+	# Split content into lines
+	var lines = content.split("\n")
+	var line_index = 0
+	var total_lines = lines.size()
+	
+	while line_index < total_lines:
+		var line = lines[line_index].strip_edges()
+		line_index += 1
+		
+		# Skip empty lines and process completed tetrahedrons
+		if line == "":
+			if current_vertices.size() == 4:
+				var tetra = Basis4.new(
+					current_vertices[0],
+					current_vertices[1],
+					current_vertices[2],
+					current_vertices[3]
+				)
+				tetrahedrons.append(tetra)
+				current_vertices = []
+			elif current_vertices.size() > 0:
+				return []  # Return empty array if tetrahedron is invalid
+			continue
+		
+		# Check for section header (e.g., "1:")
+		if line.ends_with(":"):
+			var section_str = line.trim_suffix(":")
+			if section_str.is_valid_int():
+				current_vertices = []
+			else:
+				return []  # Return empty array if section header is invalid
+			continue
+		
+		# Parse coordinates
+		var coords = line.split(" ", false)
+		if coords.size() == 4:
+			var coord_floats = []
+			for coord in coords:
+				if coord.is_valid_float():
+					coord_floats.append(float(coord))
+				else:
+					return []  # Return empty array if coordinate is invalid
+			var vertex = Vector4(
+				coord_floats[0],
+				coord_floats[1],
+				coord_floats[2],
+				coord_floats[3]
+			)
+			current_vertices.append(vertex)
+		else:
+			return []  # Return empty array if wrong number of coordinates
+	
+	# Handle the last tetrahedron
+	if current_vertices.size() == 4:
+		var tetra = Basis4.new(
+			current_vertices[0],
+			current_vertices[1],
+			current_vertices[2],
+			current_vertices[3]
+		)
+		tetrahedrons.append(tetra)
+	elif current_vertices.size() > 0:
+		return []
+	
+	return tetrahedrons
 
 
 # ---------------------- #
 #     TRANSFORMATIONS    #
 # ---------------------- #
+
 
 # Applies a 4D translation to all tetrahedra by the specified offset
 func translate_mesh(translation: Vector4) -> void:
@@ -673,6 +758,9 @@ func create_mesh():
 # Called when node is added to scene, sets up mesh updates
 func _ready():
 	assert(world, "World is missing.")
+	assert(mesh_file, "Mesh File is missing.")
+	
+	tetrahedrons = read_tetrahedrons_4d(mesh_file)
 	
 	# Apply Transformations
 	if scale_4d != Vector4.ONE: scale_mesh(scale_4d)

@@ -26,7 +26,7 @@ func _init(i_vec := Vector4(1,0,0,0),
 	j = j_vec
 	k = k_vec
 	l = l_vec
-
+	
 # Add another Basis4 to this one component-wise
 func add(m: Basis4) -> Basis4:
 	return Basis4.new(
@@ -168,3 +168,7 @@ func determinant() -> float:
 # Convert this Basis4 into a 2D Array of Vector4 columns
 func to_array() -> Array:
 	return [i, j, k, l]
+
+# Convert this Basis4 into a String
+func _to_string() -> String:
+	return "Basis4([" + ", ".join([str(i), str(j), str(k), str(l)]) + "])"

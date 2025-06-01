@@ -8,7 +8,7 @@ camera_angle = 20.0
 distance = 10.0
 
 [node name="Pivot" type="Node3D" parent="."]
-transform = Transform3D(0.137249, 0, -0.988226, 0, 0.999993, 0, 0.988219, 0, 0.137249, 0, 0, 0)
+transform = Transform3D(0.946728, 0, -0.314827, 0, 0.999993, 0, 0.314824, 0, 0.946735, 0, 0, 0)
 
 [node name="Camera" type="Camera3D" parent="Pivot"]
-transform = Transform3D(1.00001, 2.60694e-07, -7.12987e-07, 0, 0.94035, 0.343827, 7.58223e-07, -0.343827, 0.94035, 0, 3.4202, 9.39692)
+transform = Transform3D(1.00001, 4.19157e-07, -1.14637e-06, 0, 0.94035, 0.343828, 1.2191e-06, -0.343828, 0.94035, 0, 3.4202, 9.39693)

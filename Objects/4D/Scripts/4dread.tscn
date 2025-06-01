@@ -1,0 +1,105 @@
+[gd_scene load_steps=2 format=3 uid="uid://cft0s5fsujlr3"]
+
+[sub_resource type="GDScript" id="GDScript_ltjyh"]
+script/source = "# This script reads a 4D tetrahedral mesh from a text file and extracts each tetrahedron
+# into a Basis4 instance, with each vertex stored as a Vector4 (x, y, z, w).
+# Optimized for speed by reading the entire file at once and minimizing string operations.
+
+extends Node
+
+@export_file(\"*.txt\") var input_file: String = \"res://tetrahedrons_4d.txt\"
+
+# Read tetrahedrons from a text file and extract as Basis4 instances.
+func read_tetrahedrons_4d(input_file: String) -> Array:
+	var tetrahedrons = []
+	var current_vertices = []
+	
+	# Open and read the entire file at once for speed
+	var file := FileAccess.open(input_file, FileAccess.READ)
+	if not file:
+		return []  # Return empty array if file cannot be opened
+	var content = file.get_as_text()
+	file.close()
+	
+	# Split content into lines
+	var lines = content.split(\"\\n\")
+	var line_index = 0
+	var total_lines = lines.size()
+	
+	while line_index < total_lines:
+		var line = lines[line_index].strip_edges()
+		line_index += 1
+		
+		# Skip empty lines and process completed tetrahedrons
+		if line == \"\":
+			if current_vertices.size() == 4:
+				var tetra = Basis4.new(
+					current_vertices[0],
+					current_vertices[1],
+					current_vertices[2],
+					current_vertices[3]
+				)
+				tetrahedrons.append(tetra)
+				current_vertices = []
+			elif current_vertices.size() > 0:
+				return []  # Return empty array if tetrahedron is invalid
+			continue
+		
+		# Check for section header (e.g., \"1:\")
+		if line.ends_with(\":\"):
+			var section_str = line.trim_suffix(\":\")
+			if section_str.is_valid_int():
+				current_vertices = []
+			else:
+				return []  # Return empty array if section header is invalid
+			continue
+		
+		# Parse coordinates
+		var coords = line.split(\" \", false)
+		if coords.size() == 4:
+			var coord_floats = []
+			for coord in coords:
+				if coord.is_valid_float():
+					coord_floats.append(float(coord))
+				else:
+					return []  # Return empty array if coordinate is invalid
+			var vertex = Vector4(
+				coord_floats[0],
+				coord_floats[1],
+				coord_floats[2],
+				coord_floats[3]
+			)
+			current_vertices.append(vertex)
+		else:
+			return []  # Return empty array if wrong number of coordinates
+	
+	# Handle the last tetrahedron
+	if current_vertices.size() == 4:
+		var tetra = Basis4.new(
+			current_vertices[0],
+			current_vertices[1],
+			current_vertices[2],
+			current_vertices[3]
+		)
+		tetrahedrons.append(tetra)
+	elif current_vertices.size() > 0:
+		return []  # Return empty array if last tetrahedron is invalid
+	
+	return tetrahedrons
+
+func _ready():
+	# Read tetrahedrons when the node is ready
+	var tetrahedrons = read_tetrahedrons_4d(input_file)
+	# Example usage: Access tetrahedrons if needed
+	if tetrahedrons.size() > 0:
+		var first_tetra = tetrahedrons[0]
+		# Use first_tetra.v0, first_tetra.v1, etc., as needed
+		pass
+	
+	print(tetrahedrons[0])
+	print(tetrahedrons[1])
+"
+
+[node name="4Dread" type="Node3D"]
+script = SubResource("GDScript_ltjyh")
+input_file = "res://Objects/4D/Scripts/tetrahedrons_4d.txt"

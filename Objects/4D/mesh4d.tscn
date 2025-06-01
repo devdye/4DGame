@@ -8,3 +8,4 @@ albedo_color = Color(0.988235, 0.384314, 0.333333, 1)
 [node name="MeshInstance4D" type="MeshInstance3D"]
 material_override = SubResource("StandardMaterial3D_ia0h7")
 script = ExtResource("1_g1j0d")
+mesh_file = null
