@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=4 uid="uid://ow6qujwsy0is"]
+[gd_scene load_steps=11 format=4 uid="uid://ow6qujwsy0is"]
 
 [ext_resource type="Script" uid="uid://bpw7lxc6jfhah" path="res://Levels/Scripts/world4d.gd" id="1_1ot53"]
 [ext_resource type="PackedScene" uid="uid://c4o6df7wispq8" path="res://Entities/RotateCam/RotateCam.tscn" id="2_1ot53"]
@@ -20,16 +20,19 @@ sky = SubResource("Sky_f6ubm")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1ot53"]
+albedo_color = Color(0.988235, 0.384314, 0.333333, 1)
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_1ot53"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 10, 10, 10),
 "format": 34359742465,
 "index_count": 36,
-"index_data": PackedByteArray("AAABAAIAAwACAAEABAAFAAYABwAGAAUAAAAEAAEABgABAAQAAgADAAUABwAFAAMAAAACAAQABQAEAAIAAQAGAAMABwADAAYA"),
+"index_data": PackedByteArray("AAABAAIAAwACAAEABAAFAAYABwAGAAUAAAACAAQABQAEAAIAAQAGAAMABwADAAYAAAAEAAEABgABAAQAAgADAAUABwAFAAMA"),
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
 "vertex_count": 8,
-"vertex_data": PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAAAAAAAACBBAAAAAAAAIEEAAAAAAAAAAAAAIEEAACBBAAAgQQAAAAAAAAAAAAAgQQAAIEEAAAAAAAAgQQAAAAAAACBBAAAgQQAAIEEAACBB")
+"vertex_data": PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAAAIEEAAAAAAAAAAAAAAAAAACBBAAAAAAAAIEEAACBBAAAgQQAAAAAAAAAAAAAgQQAAAAAAACBBAAAgQQAAIEEAAAAAAAAgQQAAIEEAACBB")
 }]
 
 [node name="TestWorld" type="Node3D"]
@@ -37,10 +40,16 @@ script = ExtResource("1_1ot53")
 
 [node name="RotateCam" parent="." instance=ExtResource("2_1ot53")]
 rotation_time = 2.5
-camera_height = 15.0
-distance = 30.0
+distance = 40.0
 
 [node name="4DRotationViewer" parent="RotateCam" node_paths=PackedStringArray("world_4d") instance=ExtResource("4_mggor")]
+world_4d = NodePath("../..")
+
+[node name="RotateCam2" parent="." instance=ExtResource("2_1ot53")]
+rotation_time = 2.5
+distance = 40.0
+
+[node name="4DRotationViewer" parent="RotateCam2" node_paths=PackedStringArray("world_4d") instance=ExtResource("4_mggor")]
 world_4d = NodePath("../..")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -52,12 +61,10 @@ environment = SubResource("Environment_da1h1")
 
 [node name="Mesh" parent="." node_paths=PackedStringArray("world") instance=ExtResource("2_m5bqa")]
 transform = Transform3D(1, 0.000124595, -0.00057199, -0.000123475, 0.999998, 0.00195636, 0.000572233, -0.00195629, 0.999998, -5, -2, -5)
+material_override = SubResource("StandardMaterial3D_1ot53")
 mesh = SubResource("ArrayMesh_1ot53")
 world = NodePath("..")
-position_4d = Vector4(0, 0, 0, 2)
-scale_4d = Vector4(10, 10, 10, 10)
-rotation_3d_planes = Vector3(25, 523, 34)
-rotation_4d_planes = Vector3(23, 25, 24)
+scale_4d = Vector4(10, 10, 10, 100)
 
 [node name="FreeCam" parent="." instance=ExtResource("3_1r5jd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.705025, 4.8791)

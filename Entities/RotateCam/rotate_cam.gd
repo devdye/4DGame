@@ -6,16 +6,14 @@ extends Node3D
 
 @export var rotation_time: float = 1.0
 
-@export var camera_height: float = 5.0
+@export_range(-90, 90, 5.0) var camera_angle: float = 0.0
 @export var distance: float = 25.0
 
 func _process(delta: float) -> void:
-	var camera_back = sqrt(distance ** 2 - camera_height ** 2) if camera_height < distance else 0
+	if camera_angle == -90 or camera_angle == 90: camera_angle -= 10e-1
 	
-	camera.position = Vector3.BACK * camera_back + Vector3.UP * camera_height
-	
-	if camera_back > 0: camera.look_at(Vector3.ZERO)
-	else: camera.rotation = Vector3(-PI / 2, 0, 0)
+	camera.position = Vector3.BACK * cos(deg_to_rad(camera_angle)) * distance + Vector3.UP * sin(deg_to_rad(camera_angle)) * distance
+	camera.look_at(Vector3.ZERO)
 	
 	if abs(rotation_time) > 0.0:
 		pivot.rotate_y(delta / rotation_time)

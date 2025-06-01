@@ -15,6 +15,8 @@ extends MeshInstance3D
 # Reference to the 4D world object holding the current 3D subspace
 @export var world: World4D
 
+# Reference to the 3D Mesh
+
 # Position in the 4D World
 @export var position_4d := Vector4.ZERO
 
@@ -565,53 +567,47 @@ func get_triangles_from_points(points: Array) -> Array:
 	# Return the two triangles as arrays of Vector3
 	return [tri_a, tri_b]
 
+# Builds a vertex array and index array from a list of triangles
 func build_vertices_and_indices(triangles: Array) -> Dictionary:
-	var raw_vertices := []
-	var raw_indices := []
-	var idx_map := {}
-	var vertex_normals := []
+	var raw_vertices := []  # Temporary list to collect unique Vector3 vertices
+	var raw_indices := []  # Temporary list to collect triangle indices
+	var idx_map := {}  # Map from Vector3 to its index in raw_vertices
 
+	# Loop over each triangle or triangle group
 	for tri in triangles:
 		var tris := []
+		
+		# If tri is already a single triangle, wrap in array
 		if tri.size() == 3 and tri[0] is Vector3:
 			tris = [tri]
 		else:
 			tris = tri
 
+		# Process each individual triangle
 		for single_tri in tris:
-			assert(single_tri.size() == 3, "Each triangle must have exactly 3 vertices")
-
+			assert(single_tri.size() == 3)
+			
+			# For each vertex, assign or reuse an index
 			for v in single_tri:
 				if not idx_map.has(v):
-					var idx = raw_vertices.size()
+					idx_map[v] = raw_vertices.size()
 					raw_vertices.append(v)
-					vertex_normals.append(Vector3.ZERO)
-					idx_map[v] = idx
 				raw_indices.append(idx_map[v])
 
-			var A = single_tri[0]
-			var B = single_tri[1]
-			var C = single_tri[2]
-			var AB = B - A
-			var AC = C - A
-			var face_normal = AB.cross(AC).normalized()
+	# Convert raw_vertices to a PackedVector3Array
+	var vertices = PackedVector3Array()
+	for v in raw_vertices:
+		vertices.append(v)
 
-			for i in range(3):
-				var vertex_index = idx_map[single_tri[i]]
-				vertex_normals[vertex_index] += face_normal
+	# Convert raw_indices to a PackedInt32Array
+	var indices = PackedInt32Array()
+	for i in raw_indices:
+		indices.append(i)
 
-	for i in range(vertex_normals.size()):
-		if vertex_normals[i] != Vector3.ZERO:
-			vertex_normals[i] = vertex_normals[i].normalized()
-
-	var vertices = PackedVector3Array(raw_vertices)
-	var indices = PackedInt32Array(raw_indices)
-	var normals = PackedVector3Array(vertex_normals)
-
+	# Return dictionary containing vertices and indices
 	return {
 		"vertices": vertices,
 		"indices": indices,
-		"normals": normals
 	}
 
 # Creates a mesh by intersecting each tetrahedron with a hyperplane
@@ -654,7 +650,7 @@ func create_mesh():
 		var AB = tri[1] - tri[0]
 		var AC = tri[2] - tri[0]
 		var normal = AB.cross(AC).normalized()
-		if normal.dot(to_center) < 0:
+		if normal.dot(to_center) > 0:
 			# Flip winding: swap tri[1] and tri[2]
 			var temp = tri[1]
 			tri[1] = tri[2]
