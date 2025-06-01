@@ -25,9 +25,9 @@ extends MeshInstance3D
 @export var scale_4d := Vector4.ONE
 
 # Rotations in 4D World
-@export var rotation_3d_planes := Vector3.ZERO  # XY, YZ, XZ rotations
-@export var rotation_4d_planes := Vector3.ZERO  # XW, YW, ZW rotations
-
+@export var rotation_3d_planes := Vector3.ZERO # XY, YZ, XZ rotations
+@export var rotation_4d_planes := Vector3.ZERO # XW, YW, ZW rotations
+		
 # NODES
 @onready var collision_shape: CollisionShape3D = $StaticBody3D/CollisionShape
 
@@ -35,7 +35,247 @@ extends MeshInstance3D
 var intersect =  Intersect4D.new()
 
 # MODEL
-var tetrahedrons = []
+var base_tetrahedrons = []
+var tetrahedrons = [Basis4.new(
+		Vector4(0, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 1, 0),
+		Vector4(0, 0, 0, 1),),
+	Basis4.new(
+		Vector4(0, 1, 1, 1),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 1, 0),
+		Vector4(0, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 1, 0),
+		Vector4(0, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 0, 1),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 0, 1),
+		Vector4(0, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 0, 1, 1),
+		Vector4(0, 0, 1, 0),
+		Vector4(0, 0, 0, 1),
+		Vector4(0, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 0, 0),
+		Vector4(1, 1, 0, 0),
+		Vector4(1, 0, 1, 0),
+		Vector4(1, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 1),
+		Vector4(1, 1, 0, 0),
+		Vector4(1, 0, 1, 0),
+		Vector4(1, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 0),
+		Vector4(1, 1, 0, 0),
+		Vector4(1, 0, 1, 0),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 0, 1),
+		Vector4(1, 1, 0, 0),
+		Vector4(1, 0, 0, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 1, 1),
+		Vector4(1, 0, 1, 0),
+		Vector4(1, 0, 0, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 0, 0, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 0, 1, 0),
+		Vector4(0, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 1, 1),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 0, 1, 0),
+		Vector4(0, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 1, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 0, 1, 0),
+		Vector4(1, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 0, 1),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 0, 0, 1),
+		Vector4(1, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 0, 1, 1),
+		Vector4(0, 0, 1, 0),
+		Vector4(0, 0, 0, 1),
+		Vector4(1, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 0, 0),
+		Vector4(1, 1, 0, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 1, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 1),
+		Vector4(1, 1, 0, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 1, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 0),
+		Vector4(1, 1, 0, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 0, 1),
+		Vector4(1, 1, 0, 0),
+		Vector4(0, 1, 0, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 1, 1),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 1, 0, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 0, 0, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 0, 1),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 0, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(1, 1, 0, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 0, 1),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 0, 0, 1),
+		Vector4(1, 1, 0, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 0, 1),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 0, 1),
+		Vector4(1, 1, 0, 1),
+	),
+	Basis4.new(
+		Vector4(0, 0, 1, 0),
+		Vector4(1, 0, 1, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 1),
+		Vector4(1, 0, 1, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 0),
+		Vector4(1, 0, 1, 0),
+		Vector4(0, 1, 1, 0),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 1, 1),
+		Vector4(1, 0, 1, 0),
+		Vector4(0, 0, 1, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 1, 1),
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 0, 1, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 0, 0, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 1, 0),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 1, 0),
+	),
+	Basis4.new(
+		Vector4(1, 1, 0, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(1, 1, 1, 0),
+	),
+	Basis4.new(
+		Vector4(1, 0, 1, 0),
+		Vector4(1, 0, 0, 0),
+		Vector4(0, 0, 1, 0),
+		Vector4(1, 1, 1, 0),
+	),
+	Basis4.new(
+		Vector4(0, 1, 1, 0),
+		Vector4(0, 1, 0, 0),
+		Vector4(0, 0, 1, 0),
+		Vector4(1, 1, 1, 0),
+	),
+	Basis4.new(
+		Vector4(0, 0, 0, 1),
+		Vector4(1, 0, 0, 1),
+		Vector4(0, 1, 0, 1),
+		Vector4(0, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 1, 1),
+		Vector4(1, 0, 0, 1),
+		Vector4(0, 1, 0, 1),
+		Vector4(0, 0, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 1, 0, 1),
+		Vector4(1, 0, 0, 1),
+		Vector4(0, 1, 0, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(1, 0, 1, 1),
+		Vector4(1, 0, 0, 1),
+		Vector4(0, 0, 1, 1),
+		Vector4(1, 1, 1, 1),
+	),
+	Basis4.new(
+		Vector4(0, 1, 1, 1),
+		Vector4(0, 1, 0, 1),
+		Vector4(0, 0, 1, 1),
+		Vector4(1, 1, 1, 1),
+	),
+]
 
 
 # ------------------- #
@@ -530,12 +770,17 @@ func create_mesh():
 	# Create collision shape
 	create_collision_shape()
 
+
+# ----------------- #
+#     PROCESSES     #
+# ----------------- #
+
 # Called when node is added to scene, sets up mesh updates
 func _ready():
+	base_tetrahedrons = tetrahedrons
+	
 	assert(world, "World is missing.")
 	assert(mesh_file, "Mesh File is missing.")
-	
-	tetrahedrons = read_tetrahedrons_4d(mesh_file)
 	
 	# Apply Transformations
 	if scale_4d != Vector4.ONE: scale_mesh(scale_4d)
@@ -546,3 +791,26 @@ func _ready():
 	# Create the initial mesh and connect world subspace changes to mesh recreation
 	create_mesh()
 	world.subspace_change.connect(create_mesh)
+
+
+# ------------- #
+#     DEBUG     #
+# ------------- #
+
+func _apply_changes() -> void:
+	if not world:
+		print("World is missing.")
+		return
+	
+	tetrahedrons = base_tetrahedrons
+	
+	if scale_4d != Vector4.ONE: scale_mesh(scale_4d)
+	if rotation_3d_planes != Vector3.ZERO: rotate_xy_yz_xz(rotation_3d_planes)
+	if rotation_4d_planes != Vector3.ZERO: rotate_wx_wy_wz(rotation_4d_planes)
+	if position_4d != Vector4.ZERO: translate_mesh(position_4d)
+	
+	# Create the initial mesh and connect world subspace changes to mesh recreation
+	create_mesh()
+
+@export_tool_button("Apply Changes")
+var apply_changes_button = _apply_changes

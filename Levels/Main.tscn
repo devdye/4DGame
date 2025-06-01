@@ -1,25 +1,52 @@
-[gd_scene load_steps=8 format=3 uid="uid://ibiwgrnucp7n"]
+[gd_scene load_steps=13 format=4 uid="uid://ibiwgrnucp7n"]
 
 [ext_resource type="Script" uid="uid://bpw7lxc6jfhah" path="res://Levels/Scripts/world4d.gd" id="1_gnif3"]
 [ext_resource type="PackedScene" uid="uid://dsvgws0bp5h1h" path="res://Entities/Player/player.tscn" id="1_oj8hd"]
+[ext_resource type="PackedScene" uid="uid://bh6mpc546vq18" path="res://Objects/4D/mesh4d.tscn" id="3_lwy2l"]
+[ext_resource type="PackedScene" uid="uid://clgm2yftgiank" path="res://UI/4DRotationViewer/rotation_viewer_4d.tscn" id="3_nj2yk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a22an"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+sky_top_color = Color(0.247059, 0.74902, 1, 1)
+sky_horizon_color = Color(0.631746, 0.86161, 1, 1)
+sky_curve = 0.235375
+ground_bottom_color = Color(9.62615e-08, 0.450876, 0.631837, 1)
+ground_horizon_color = Color(0.417378, 0.793436, 0.999999, 1)
+ground_energy_multiplier = 1.37
 
 [sub_resource type="Sky" id="Sky_vbwdf"]
 sky_material = SubResource("ProceduralSkyMaterial_a22an")
 
 [sub_resource type="Environment" id="Environment_h1khe"]
 background_mode = 2
+background_color = Color(0.247059, 0.74902, 1, 1)
+background_energy_multiplier = 0.77
 sky = SubResource("Sky_vbwdf")
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.0
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gnif3"]
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lwy2l"]
 albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nj2yk"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_nj2yk"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 3, 1, 15.2454),
+"format": 34359742465,
+"index_count": 78,
+"index_data": PackedByteArray("AAABAAIAAQADAAIAAQAEAAMABQAGAAMABwAIAAkACQAIAAoACQAKAAsADAAKAA0AAAACAAcABwACAA4ABwAOAAwABQAOAAYAAQAJAA8ACQAQAA8ACQALABAABAARABAAAAAHAAEACQABAAcAAAAHAAEACQABAAcABQASABMACgATABIACgASABAACwAKABAADAATAAoABAAQABIA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 20,
+"vertex_data": PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAAACviwxBAAAAANlNPD8C7XNBAAAAAAAAgD8C7XNBAAAAAAAAAAAC7XNBAAAAAAAAAACwiwxBAABAQAAAAAAAAAAAAABAQAAAAACviwxBAABAQAAAgD8AAAAAAABAQNlNPD8C7XNBAABAQAAAgD8C7XNBAABAQAAAAAAC7XNBAABAQAAAAACwiwxBYzoNQAAAAAAC7XNBAAAAAAAAgD+viwxBYzoNQAAAgD8C7XNBAAAAAAAAgD+wiwxBAAAAAE5khz4C7XNBdRZLPwAAAAAC7XNB")
+}]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_7pswh"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_34bfm"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_gnif3")
@@ -31,23 +58,49 @@ environment = SubResource("Environment_h1khe")
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.22606, 6.83901, -2.66982)
-use_collision = true
-size = Vector3(28.2799, 1, 25.4839)
-material = SubResource("StandardMaterial3D_gnif3")
-
 [node name="Player" parent="." instance=ExtResource("1_oj8hd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22.9116, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.80016, 0)
+wall_min_slide_angle = 0.872665
+
+[node name="RotationViewer4D" parent="Player" node_paths=PackedStringArray("world_4d") instance=ExtResource("3_nj2yk")]
+world_4d = NodePath("../..")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4415, 7.7234, 0.11805)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 use_collision = true
-size = Vector3(3.1098, 1, 5.13214)
+size = Vector3(4, 1, 5.132)
 material = SubResource("StandardMaterial3D_lwy2l")
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.3449, 8.82245, 3.81205)
-use_collision = true
-size = Vector3(3.1098, 1, 12.5201)
-material = SubResource("StandardMaterial3D_lwy2l")
+[node name="Objects" type="Node3D" parent="."]
+
+[node name="Cube3" parent="Objects" node_paths=PackedStringArray("world") instance=ExtResource("3_lwy2l")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.435863, 1.531, -21.011)
+material_override = SubResource("StandardMaterial3D_nj2yk")
+mesh = SubResource("ArrayMesh_nj2yk")
+skeleton = NodePath("../../../..")
+world = NodePath("../..")
+mesh_file = "res://Ressources/Models/hypercube.txt"
+scale_4d = Vector4(3, 1, 20, 4)
+rotation_4d_planes = Vector3(0, 0, -50)
+
+[node name="Cube" parent="Objects" node_paths=PackedStringArray("world") instance=ExtResource("3_lwy2l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.94341, 1.53087, -17.06)
+material_override = SubResource("StandardMaterial3D_nj2yk")
+mesh = SubResource("ArrayMesh_7pswh")
+skeleton = NodePath("../..")
+world = NodePath("../..")
+mesh_file = "res://Ressources/Models/hypercube.txt"
+position_4d = Vector4(0, 0, 0, 0.1)
+scale_4d = Vector4(4, 1, 13, 14.675)
+
+[node name="Cube2" parent="Objects" node_paths=PackedStringArray("world") instance=ExtResource("3_lwy2l")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 18.2079, 1.531, -21.011)
+material_override = SubResource("StandardMaterial3D_nj2yk")
+mesh = SubResource("ArrayMesh_34bfm")
+skeleton = NodePath("../../..")
+world = NodePath("../..")
+mesh_file = "res://Ressources/Models/hypercube.txt"
+position_4d = Vector4(0, 0, 0, 3)
+scale_4d = Vector4(3, 1, 20, 100)
+rotation_3d_planes = Vector3(0, 42, 62)
+rotation_4d_planes = Vector3(123, 53, -51.09)

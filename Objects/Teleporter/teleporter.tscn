@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjoqccmq1twmg"]
+
+[ext_resource type="Script" uid="uid://cb7rq5hhl6nbk" path="res://Objects/Teleporter/Scripts/teleporter.gd" id="1_fgvpw"]
+
+[node name="Teleporter" type="Area3D"]
+script = ExtResource("1_fgvpw")
+groups = Array[String](["player", "entity"])
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

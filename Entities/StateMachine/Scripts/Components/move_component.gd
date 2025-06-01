@@ -6,11 +6,15 @@ extends Node3D
 # ------------ #
 
 # EXPORTS
+@export_group("Nodes")
 @export var parent: CharacterBody3D
 
+@export_group("XZ Movement")
 @export var move_speed: float = 10.0
-@export var movement_smoothness: float = 20.0
+@export var sprint_factor: float = 1.35
+@export var movement_hardness: float = 12.0
 
+@export_group("Y Movement")
 @export var jump_height: float = 1.05
 @export var air_control: float = 0.7
 @export var fall_multiplicator: float = 1.8
@@ -34,8 +38,8 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	# Make velocity smoother
-	velocity.x = lerp(velocity.x, target_velocity_xz.x, 1.0 - exp(-movement_smoothness * get_physics_process_delta_time()))
-	velocity.z = lerp(velocity.z, target_velocity_xz.y, 1.0 - exp(-movement_smoothness * get_physics_process_delta_time()))
+	velocity.x = lerp(velocity.x, target_velocity_xz.x, 1.0 - exp(-movement_hardness * get_physics_process_delta_time()))
+	velocity.z = lerp(velocity.z, target_velocity_xz.y, 1.0 - exp(-movement_hardness * get_physics_process_delta_time()))
 	
 	# Set Velocity
 	parent.velocity = velocity
@@ -56,6 +60,9 @@ func wants_jump() -> bool:
 
 func wants_move() -> bool:
 	return get_movement_direction().length() > 0.05 
+
+func wants_sprint() -> bool:
+	return false
 
 
 # --------------- #

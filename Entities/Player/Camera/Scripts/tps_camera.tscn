@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://ctv4a023627r"]
+
+[node name="TpsCamera" type="Node2D"]

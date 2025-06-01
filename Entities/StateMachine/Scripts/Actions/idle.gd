@@ -5,7 +5,7 @@ extends State
 #     VARS     #
 # ------------ #
 
-# Linked States
+@export_group("States")
 @export var fall_state: State
 @export var jump_state: State
 @export var move_state: State

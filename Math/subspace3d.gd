@@ -111,3 +111,7 @@ func verify_dot_product() -> void:
 	set_zw_angle(randf_range(-2 * PI, 2 * PI))
 
 	print(_normal.dot(_u), _normal.dot(_v), _normal.dot(_w))
+
+# Display Subspace3D as a String
+func _to_string() -> String:
+	return "Subspace3D(" + ", ".join([get_u(), get_v(), get_w()]) + ") [" + ", ".join([get_xw_angle(), get_yw_angle(), get_w()]) + ")" 

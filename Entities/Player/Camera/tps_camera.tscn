@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnyp03pq6601s"]
+
+[ext_resource type="Script" uid="uid://dldkq68dfii4q" path="res://Entities/Player/Camera/Scripts/tps_camera.gd" id="1_dhr4n"]
+
+[node name="TPSCamera" type="SpringArm3D"]
+spring_length = 7.0
+script = ExtResource("1_dhr4n")
+
+[node name="Camera" type="Camera3D" parent="."]
+current = true

@@ -5,7 +5,7 @@ extends State
 #     VARS     #
 # ------------ #
 
-# Linked States
+@export_group("States")
 @export var fall_state: State
 @export var jump_state: State
 @export var idle_state: State
@@ -20,7 +20,7 @@ func enter() -> void:
 	assert_import([fall_state, jump_state, idle_state])
 	
 	super()
-	
+
 
 # ----------------- #
 #     PROCESSES     #
@@ -40,9 +40,12 @@ func process_input(event: InputEvent) -> State:
 
 # Process Physics
 func process_physics(delta: float) -> State:
+	# Multiplier if sprinting
+	var sprint_factor: float = move_component.sprint_factor if wants_sprint() else 1
+	
 	# Make the entity move
 	var movement = get_movement_input() * move_component.move_speed
-	move_component.set_velocity_xz(movement)
+	move_component.set_velocity_xz(movement * sprint_factor)
 	
 	# Make the entity fall if it's no longer on ground
 	if !parent.is_on_floor():

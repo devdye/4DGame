@@ -11,3 +11,6 @@ func get_movement_direction() -> Vector3:
 
 func wants_jump() -> bool:
 	return false
+
+func wants_sprint() -> bool:
+	return Input.is_action_pressed("sprint")

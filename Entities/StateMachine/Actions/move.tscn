@@ -2,8 +2,5 @@
 
 [ext_resource type="Script" uid="uid://dkdy3umpyrab4" path="res://Entities/StateMachine/Scripts/Actions/move.gd" id="1_20kob"]
 
-[node name="Move" type="Node3D" node_paths=PackedStringArray("fall_state", "jump_state", "idle_state")]
+[node name="Move" type="Node3D"]
 script = ExtResource("1_20kob")
-fall_state = NodePath("")
-jump_state = NodePath("")
-idle_state = NodePath("")

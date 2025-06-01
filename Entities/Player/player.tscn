@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dsvgws0bp5h1h"]
+[gd_scene load_steps=12 format=3 uid="uid://dsvgws0bp5h1h"]
 
 [ext_resource type="Script" uid="uid://lrrg045erkes" path="res://Entities/Player/Scripts/player.gd" id="1_lu8i8"]
 [ext_resource type="Script" uid="uid://blm7mbxnfm4n8" path="res://Entities/StateMachine/Scripts/state_machine.gd" id="2_tekja"]
@@ -7,14 +7,16 @@
 [ext_resource type="PackedScene" uid="uid://bm2rry24efwic" path="res://Entities/StateMachine/Actions/move.tscn" id="5_x1y6q"]
 [ext_resource type="PackedScene" uid="uid://cotxf8gi3ubfd" path="res://Entities/StateMachine/Actions/fall.tscn" id="6_ap3xn"]
 [ext_resource type="Script" uid="uid://di6h71lms6k0y" path="res://Entities/Player/Scripts/Components/player_movement.gd" id="7_01a4e"]
-[ext_resource type="Script" uid="uid://dou6urwr67vjr" path="res://Entities/Player/Scripts/head.gd" id="7_lub02"]
+[ext_resource type="PackedScene" uid="uid://bnyp03pq6601s" path="res://Entities/Player/Camera/tps_camera.tscn" id="8_7a1se"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_01a4e"]
 height = 0.5
 
-[node name="Player" type="CharacterBody3D"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_7a1se"]
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1_lu8i8")
 
 [node name="MoveMachine" type="Node3D" parent="." node_paths=PackedStringArray("parent", "starting_state", "move_component")]
@@ -49,12 +51,15 @@ shape = SubResource("CapsuleShape3D_sh265")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.74762, 0)
 shape = SubResource("CylinderShape3D_01a4e")
 
-[node name="Head" type="Node3D" parent="."]
-script = ExtResource("7_lub02")
-
-[node name="Camera" type="Camera3D" parent="Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.615048, -0.514068)
-
 [node name="MoveComponent" type="Node3D" parent="." node_paths=PackedStringArray("parent")]
 script = ExtResource("7_01a4e")
 parent = NodePath("..")
+jump_height = 3.0
+air_control = 0.85
+fall_multiplicator = 2.0
+
+[node name="TPSCamera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("8_7a1se")]
+player = NodePath("..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_7a1se")

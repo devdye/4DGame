@@ -48,9 +48,14 @@ func wrap_angles(v: Vector3) -> Vector3:
 	)
 
 
-# ------------- #
-#     UTILS     #
-# ------------- #
+# ----------------- #
+#     PROCESSES     #
+# ----------------- #
+
+# Reset subspace3D
+func _ready() -> void:
+	subspace3D = Subspace3D.new()
+	emit_signal("subspace_change")
 
 # Updates current rotation toward target and emits a signal if it changes
 func _process(delta: float) -> void:
@@ -83,3 +88,26 @@ func _unhandled_input(ev: InputEvent) -> void:
 		# Update target rotation
 		target_rot.y += dx
 		target_rot.x += dy
+
+
+# ------------- #
+#     DEBUG     #
+# ------------- #
+
+@export_range(0, 360, 0.1) var debug_xw: float = 0.0:
+	set(value):
+		debug_xw = value
+		subspace3D.set_xw_angle(deg_to_rad(value))
+		emit_signal("subspace_change")
+		
+		print("Subspace Change!")
+		print(subspace3D)
+
+@export_range(0, 360, 0.1) var debug_zw: float = 0.0:
+	set(value):
+		debug_zw = value
+		subspace3D.set_zw_angle(deg_to_rad(value))
+		emit_signal("subspace_change")
+		
+		print("Subspace Change!")
+		print(subspace3D)

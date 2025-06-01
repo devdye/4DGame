@@ -1,3 +1,5 @@
+# This script allows for free movement and rotation in a 3D space, similar to a first-person camera.
+
 extends CharacterBody3D
 
 
