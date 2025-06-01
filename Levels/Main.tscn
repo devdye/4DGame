@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://ibiwgrnucp7n"]
+[gd_scene load_steps=6 format=3 uid="uid://ibiwgrnucp7n"]
 
+[ext_resource type="Script" uid="uid://bpw7lxc6jfhah" path="res://Levels/Scripts/world4d.gd" id="1_gnif3"]
 [ext_resource type="PackedScene" uid="uid://dsvgws0bp5h1h" path="res://Entities/Player/player.tscn" id="1_oj8hd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a22an"]
@@ -16,6 +17,7 @@ tonemap_mode = 2
 glow_enabled = true
 
 [node name="Main" type="Node3D"]
+script = ExtResource("1_gnif3")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_h1khe")

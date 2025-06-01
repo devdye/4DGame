@@ -1,18 +1,34 @@
 extends State
 
+
+# ------------ #
+#     VARS     #
+# ------------ #
+
+# Linked States
 @export var fall_state: State
 @export var jump_state: State
 @export var move_state: State
 
+
+# ------------------------ #
+#     STATE MANAGEMENT     #
+# ------------------------ #
+
+# Function executed when entering the State
 func enter() -> void:
 	assert_import([fall_state, jump_state, move_state])
 	
 	super()
+	
 	move_component.set_velocity_xz(Vector3.ZERO)
 	
-func exit() -> void:
-	return
-	
+
+# ----------------- #
+#     PROCESSES     #
+# ----------------- #
+
+# Process Inputs
 func process_input(event: InputEvent) -> State:
 	if wants_jump() and parent.is_on_floor():
 		return jump_state
@@ -21,6 +37,7 @@ func process_input(event: InputEvent) -> State:
 	
 	return null
 
+# Process Physics
 func process_physics(delta: float) -> State:
 	parent.move_and_slide()
 	

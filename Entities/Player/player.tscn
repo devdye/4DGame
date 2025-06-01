@@ -17,8 +17,10 @@ height = 0.5
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_lu8i8")
 
-[node name="MoveMachine" type="Node3D" parent="." node_paths=PackedStringArray("move_component")]
+[node name="MoveMachine" type="Node3D" parent="." node_paths=PackedStringArray("parent", "starting_state", "move_component")]
 script = ExtResource("2_tekja")
+parent = NodePath("..")
+starting_state = NodePath("Idle")
 move_component = NodePath("../MoveComponent")
 
 [node name="Jump" parent="MoveMachine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state") instance=ExtResource("3_7a1se")]
@@ -47,9 +49,8 @@ shape = SubResource("CapsuleShape3D_sh265")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.74762, 0)
 shape = SubResource("CylinderShape3D_01a4e")
 
-[node name="Head" type="Node3D" parent="." node_paths=PackedStringArray("player")]
+[node name="Head" type="Node3D" parent="."]
 script = ExtResource("7_lub02")
-player = NodePath("..")
 
 [node name="Camera" type="Camera3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.615048, -0.514068)

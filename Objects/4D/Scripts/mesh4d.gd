@@ -28,6 +28,9 @@ extends MeshInstance3D
 @export var rotation_3d_planes := Vector3.ZERO  # XY, YZ, XZ rotations
 @export var rotation_4d_planes := Vector3.ZERO  # XW, YW, ZW rotations
 
+# NODES
+@onready var collision_shape: CollisionShape3D = $StaticBody3D/CollisionShape
+
 # HELPERS
 var intersect =  Intersect4D.new()
 
@@ -35,247 +38,6 @@ var intersect =  Intersect4D.new()
 var tetrahedrons = []
 
 
-"""
-Basis4.new(
-		Vector4(0, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 1, 0),
-		Vector4(0, 0, 0, 1),),
-	Basis4.new(
-		Vector4(0, 1, 1, 1),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 1, 0),
-		Vector4(0, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 1, 0),
-		Vector4(0, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 0, 1),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 0, 1),
-		Vector4(0, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 0, 1, 1),
-		Vector4(0, 0, 1, 0),
-		Vector4(0, 0, 0, 1),
-		Vector4(0, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 0, 0),
-		Vector4(1, 1, 0, 0),
-		Vector4(1, 0, 1, 0),
-		Vector4(1, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 1),
-		Vector4(1, 1, 0, 0),
-		Vector4(1, 0, 1, 0),
-		Vector4(1, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 0),
-		Vector4(1, 1, 0, 0),
-		Vector4(1, 0, 1, 0),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 0, 1),
-		Vector4(1, 1, 0, 0),
-		Vector4(1, 0, 0, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 1, 1),
-		Vector4(1, 0, 1, 0),
-		Vector4(1, 0, 0, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 0, 0, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 0, 1, 0),
-		Vector4(0, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 1, 1),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 0, 1, 0),
-		Vector4(0, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 1, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 0, 1, 0),
-		Vector4(1, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 0, 1),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 0, 0, 1),
-		Vector4(1, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 0, 1, 1),
-		Vector4(0, 0, 1, 0),
-		Vector4(0, 0, 0, 1),
-		Vector4(1, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 0, 0),
-		Vector4(1, 1, 0, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 1, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 1),
-		Vector4(1, 1, 0, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 1, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 0),
-		Vector4(1, 1, 0, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 0, 1),
-		Vector4(1, 1, 0, 0),
-		Vector4(0, 1, 0, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 1, 1),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 1, 0, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 0, 0, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 0, 1),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 0, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(1, 1, 0, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 0, 1),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 0, 0, 1),
-		Vector4(1, 1, 0, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 0, 1),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 0, 1),
-		Vector4(1, 1, 0, 1),
-	),
-	Basis4.new(
-		Vector4(0, 0, 1, 0),
-		Vector4(1, 0, 1, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 1),
-		Vector4(1, 0, 1, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 0),
-		Vector4(1, 0, 1, 0),
-		Vector4(0, 1, 1, 0),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 1, 1),
-		Vector4(1, 0, 1, 0),
-		Vector4(0, 0, 1, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 1, 1),
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 0, 1, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 0, 0, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 1, 0),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 1, 0),
-	),
-	Basis4.new(
-		Vector4(1, 1, 0, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(1, 1, 1, 0),
-	),
-	Basis4.new(
-		Vector4(1, 0, 1, 0),
-		Vector4(1, 0, 0, 0),
-		Vector4(0, 0, 1, 0),
-		Vector4(1, 1, 1, 0),
-	),
-	Basis4.new(
-		Vector4(0, 1, 1, 0),
-		Vector4(0, 1, 0, 0),
-		Vector4(0, 0, 1, 0),
-		Vector4(1, 1, 1, 0),
-	),
-	Basis4.new(
-		Vector4(0, 0, 0, 1),
-		Vector4(1, 0, 0, 1),
-		Vector4(0, 1, 0, 1),
-		Vector4(0, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 1, 1),
-		Vector4(1, 0, 0, 1),
-		Vector4(0, 1, 0, 1),
-		Vector4(0, 0, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 1, 0, 1),
-		Vector4(1, 0, 0, 1),
-		Vector4(0, 1, 0, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(1, 0, 1, 1),
-		Vector4(1, 0, 0, 1),
-		Vector4(0, 0, 1, 1),
-		Vector4(1, 1, 1, 1),
-	),
-	Basis4.new(
-		Vector4(0, 1, 1, 1),
-		Vector4(0, 1, 0, 1),
-		Vector4(0, 0, 1, 1),
-		Vector4(1, 1, 1, 1),
-	),"""
-	
 # ------------------- #
 #     MESH READER     #
 # ------------------- #
@@ -362,7 +124,6 @@ func read_tetrahedrons_4d(input_file: String) -> Array:
 # ---------------------- #
 #     TRANSFORMATIONS    #
 # ---------------------- #
-
 
 # Applies a 4D translation to all tetrahedra by the specified offset
 func translate_mesh(translation: Vector4) -> void:
@@ -589,6 +350,11 @@ func rotate_wx_wy_wz(rotation_angles: Vector3):
 	# Update vertices
 	tetrahedrons = new_tetrahedrons
 
+
+# ------------ #
+#     MESH     #
+# ------------ #
+
 # Extracts two triangles from four coplanar points by ordering them CCW
 func get_triangles_from_points(points: Array) -> Array:
 	# Expect exactly 4 distinct, coplanar Vector3s
@@ -695,6 +461,12 @@ func build_vertices_and_indices(triangles: Array) -> Dictionary:
 		"indices": indices,
 	}
 
+# Create a collision shape using a mesh
+func create_collision_shape():
+	var shape = mesh.create_trimesh_shape()
+	
+	if collision_shape: collision_shape.shape = shape
+
 # Creates a mesh by intersecting each tetrahedron with a hyperplane
 func create_mesh():
 	var raw_tris := []
@@ -754,6 +526,9 @@ func create_mesh():
 
 	# Assign the generated mesh to this MeshInstance
 	mesh = arr_mesh
+	
+	# Create collision shape
+	create_collision_shape()
 
 # Called when node is added to scene, sets up mesh updates
 func _ready():

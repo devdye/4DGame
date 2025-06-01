@@ -1,13 +1,31 @@
 extends State
 
+
+# ------------ #
+#     VARS     #
+# ------------ #
+
+# Linked States
 @export var idle_state: State
 @export var move_state: State
 
+
+# ------------------------ #
+#     STATE MANAGEMENT     #
+# ------------------------ #
+
+# Function executed when entering the State
 func enter() -> void:
 	assert_import([idle_state, move_state])
 	
 	super()
 
+
+# ----------------- #
+#     PROCESSES     #
+# ----------------- #
+
+# Process Physics
 func process_physics(delta: float) -> State:
 	if parent.is_on_floor():
 		if wants_move():
@@ -18,7 +36,5 @@ func process_physics(delta: float) -> State:
 	
 	var movement = move_component.get_movement_direction() * move_component.air_control
 	move_component.set_velocity_xz(movement)
-	
-	print(movement)
 	
 	return null

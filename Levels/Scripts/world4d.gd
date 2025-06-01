@@ -36,7 +36,7 @@ func lerp_angles(from: Vector3, to: Vector3, weight: float):
 	)
 
 # Checks if two vectors differ by more than a specified margin
-func is_different(vector1: Vector3, vector2: Vector3, margin: float = 10e-4):
+func is_different(vector1: Vector3, vector2: Vector3, margin: float = 0.0009):
 	return abs(vector1.x - vector2.x + vector1.y - vector2.y + vector1.z - vector2.z) > margin
 
 # Wraps each component of a rotation vector into the range [0, 2π)
