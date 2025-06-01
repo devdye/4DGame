@@ -55,5 +55,6 @@ script = ExtResource("7_lub02")
 [node name="Camera" type="Camera3D" parent="Head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.615048, -0.514068)
 
-[node name="MoveComponent" type="Node3D" parent="."]
+[node name="MoveComponent" type="Node3D" parent="." node_paths=PackedStringArray("parent")]
 script = ExtResource("7_01a4e")
+parent = NodePath("..")

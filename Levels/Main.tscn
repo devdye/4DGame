@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ibiwgrnucp7n"]
+[gd_scene load_steps=8 format=3 uid="uid://ibiwgrnucp7n"]
 
 [ext_resource type="Script" uid="uid://bpw7lxc6jfhah" path="res://Levels/Scripts/world4d.gd" id="1_gnif3"]
 [ext_resource type="PackedScene" uid="uid://dsvgws0bp5h1h" path="res://Entities/Player/player.tscn" id="1_oj8hd"]
@@ -16,6 +16,11 @@ sky = SubResource("Sky_vbwdf")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gnif3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lwy2l"]
+albedo_color = Color(1, 0, 0, 1)
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_gnif3")
 
@@ -27,9 +32,22 @@ transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -
 shadow_enabled = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8605, -10.0952, 1.578)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.22606, 6.83901, -2.66982)
 use_collision = true
-size = Vector3(76.0112, 1, 72.7356)
+size = Vector3(28.2799, 1, 25.4839)
+material = SubResource("StandardMaterial3D_gnif3")
 
 [node name="Player" parent="." instance=ExtResource("1_oj8hd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22.9116, 0)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4415, 7.7234, 0.11805)
+use_collision = true
+size = Vector3(3.1098, 1, 5.13214)
+material = SubResource("StandardMaterial3D_lwy2l")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.3449, 8.82245, 3.81205)
+use_collision = true
+size = Vector3(3.1098, 1, 12.5201)
+material = SubResource("StandardMaterial3D_lwy2l")
