@@ -30,8 +30,11 @@ func enter() -> void:
 
 # Process Inputs
 func process_input(event: InputEvent) -> State:
+	# Make the entity jump
 	if wants_jump() and parent.is_on_floor():
 		return jump_state
+		
+	# Make the entity move
 	if wants_move():
 		return move_state
 	
@@ -39,8 +42,7 @@ func process_input(event: InputEvent) -> State:
 
 # Process Physics
 func process_physics(delta: float) -> State:
-	parent.move_and_slide()
-	
+	# Make the entity fall
 	if not parent.is_on_floor():
 		return fall_state
 		
