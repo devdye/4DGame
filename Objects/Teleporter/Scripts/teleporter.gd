@@ -19,6 +19,7 @@ extends Area3D
 # When a body enter into the teleporter
 func _on_body_entered(body: Node3D) -> void:
 	for group in groups:
-		if body.is_in_group(group):
+		if body.is_in_group(group): # Check if body is included 
+			# Teleport the body
 			body.global_position = new_position
 			body.rotation_degrees = new_rotation
